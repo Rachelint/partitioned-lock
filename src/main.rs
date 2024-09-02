@@ -49,7 +49,7 @@ fn insert_into_padded_partitioned_buffer(
 
     thread_pool.join();
 
-    buffer.buffers.iter().map(|v| v.write().unwrap().len()).sum()
+    buffer.buffers.iter().map(|v| v.read().unwrap().len()).sum()
 }
 
 struct PartitionedBuffer {
@@ -81,7 +81,7 @@ fn insert_into_partitioned_buffer(num_threads: usize, num_tasks: usize, data_siz
     }
 
     thread_pool.join();
-    buffer.buffers.iter().map(|v| v.write().unwrap().len()).sum()
+    buffer.buffers.iter().map(|v| v.read().unwrap().len()).sum()
 }
 
 struct Buffer {
@@ -112,7 +112,7 @@ fn main() -> Result<(), String> {
     let instant = Instant::now();
     let num_threads = 4;
     let num_tasks = 1024 * 1024;
-    let data_size = 16;
+    let data_size = 64;
     let num_inserted_bytes = match mode.as_str() {
         MODE_PADDED => insert_into_padded_partitioned_buffer(num_threads, num_tasks, data_size),
         MODE_PARTITIONED => insert_into_partitioned_buffer(num_threads, num_tasks, data_size),
