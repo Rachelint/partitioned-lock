@@ -96,11 +96,11 @@ fn insert_into_raw_buffer(num_threads: usize, num_tasks: usize, data_size: usize
     let buffer = Arc::new(Buffer {
         buffer: RwLock::new(HashMap::with_capacity(data_size * num_tasks)),
     });
-    for _ in 0..num_tasks {
+    for i in 0..num_tasks {
         let buffer = buffer.clone();
         thread_pool.execute(move || {
             let mut buffer = buffer.buffer.write().unwrap();
-            do_with_buffer(&mut buffer, data_size, 0);
+            do_with_buffer(&mut buffer, data_size, i);
         });
     }
 
@@ -115,7 +115,7 @@ fn main() -> Result<(), String> {
     let instant = Instant::now();
     let num_threads = 4;
     let num_tasks = 1024 * 1024;
-    let data_size = 64;
+    let data_size: usize = 64;
     let num_inserted_bytes = match mode.as_str() {
         MODE_PADDED => insert_into_padded_partitioned_buffer(num_threads, num_tasks, data_size),
         MODE_PARTITIONED => insert_into_partitioned_buffer(num_threads, num_tasks, data_size),
