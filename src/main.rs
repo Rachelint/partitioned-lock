@@ -24,6 +24,7 @@ fn insert_into_padded_partitioned_buffer(
     num_tasks: usize,
     data_size: usize,
 ) -> usize {
+    println!("running in padded mode");
     let thread_pool = ThreadPool::new(num_threads);
     let rate = 4;
     let buffer = {
@@ -57,6 +58,7 @@ struct PartitionedBuffer {
 }
 
 fn insert_into_partitioned_buffer(num_threads: usize, num_tasks: usize, data_size: usize) -> usize {
+    println!("running in partitioned mode");
     let thread_pool = ThreadPool::new(num_threads);
     let rate = 4;
     let buffer = {
@@ -89,6 +91,7 @@ struct Buffer {
 }
 
 fn insert_into_raw_buffer(num_threads: usize, num_tasks: usize, data_size: usize) -> usize {
+    println!("running in raw mode");
     let thread_pool = ThreadPool::new(num_threads);
     let buffer = Arc::new(Buffer {
         buffer: RwLock::new(HashMap::with_capacity(data_size * num_tasks)),
